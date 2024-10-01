@@ -3,7 +3,7 @@ package com.example.registrationform;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-
+import android.widget.RatingBar;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -19,13 +19,14 @@ public class MainActivity extends AppCompatActivity {
 
     Spinner sp;
     boolean invalid = false;
-    TextView txtalertName;
+    TextView txtalertName, ratingText;
     EditText EmailAddress, UserPassword, UserContact, UserComment;
     Button SubmitSave;
     RadioButton Malebtn, Femalbtn;
     CheckBox html, css, php;
     LinearLayout inputLayout, outputLayout;
     TextView outputText;
+    RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +49,21 @@ public class MainActivity extends AppCompatActivity {
         inputLayout = findViewById(R.id.main);
         outputLayout = findViewById(R.id.outputLayout);
         outputText = findViewById(R.id.outputText);
+        ratingBar = findViewById(R.id.ratingBar);
+        ratingText = findViewById(R.id.rating);
 
         // Email validation pattern
         Pattern emailPattern = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
         Pattern passwordPattern = Pattern.compile("^(?=.*[!@#$%^&*(),.?\":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?\":{}|<>]{6,}$");
 
+        // Set up the RatingBar listener to show the rating immediately
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                // Display the current rating in the TextView
+                ratingText.setText("Rating: " + rating);
+            }
+        });
 
         SubmitSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
                         userInfo.append("Skill: PHP\n");
                     }
 
+                    // Get the rating value and append it
+                    float userRating = ratingBar.getRating();
+                    userInfo.append("Rating: ").append(userRating).append("\n");
 
                     // Show the collected information in an AlertDialog
                     new AlertDialog.Builder(MainActivity.this)
