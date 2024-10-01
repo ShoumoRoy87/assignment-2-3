@@ -3,6 +3,7 @@ package com.example.registrationform;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize views
-        sp = findViewById(R.id.SpCountry);
+        sp = findViewById(R.id.SpCountry);  // Spinner for country selection
         EmailAddress = findViewById(R.id.emailAddress);
         UserPassword = findViewById(R.id.userPassword);
         UserContact = findViewById(R.id.userContact);
@@ -65,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Set up the country Spinner with country array from strings.xml
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.country_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(adapter);  // Set the adapter to the Spinner
+
         SubmitSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 String password = UserPassword.getText().toString();
                 String contact = UserContact.getText().toString();
                 String comment = UserComment.getText().toString();
+                String selectedCountry = sp.getSelectedItem().toString();  // Get selected country
                 StringBuilder userInfo = new StringBuilder();
 
                 // Validate input fields
@@ -119,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
                     // Get the rating value and append it
                     float userRating = ratingBar.getRating();
                     userInfo.append("Rating: ").append(userRating).append("\n");
+
+                    // Get the selected country
+                    userInfo.append("Country: ").append(selectedCountry).append("\n");
 
                     // Show the collected information in an AlertDialog
                     new AlertDialog.Builder(MainActivity.this)
